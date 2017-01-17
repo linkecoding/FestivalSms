@@ -2,11 +2,15 @@ package com.codekong.festival_sms.bean;
 
 /**
  * Created by szh on 2016/12/23.
+ * 消息Bean
  */
 
 public class Msg {
+    //消息序号
     private int id;
+    //节日id
     private int festivalId;
+    //消息内容
     private String content;
 
     public Msg(int id, int festivalId, String content) {

@@ -17,8 +17,11 @@ import com.codekong.festival_sms.bean.FestivalLab;
 import com.codekong.festival_sms.bean.Msg;
 import com.codekong.festival_sms.config.Config;
 
-
+/**
+ * 选择短信Activity
+ */
 public class ChooseMsgActivity extends AppCompatActivity {
+    //短信ListView
     private ListView mMsgListView;
     private FloatingActionButton mFabToSend;
     private ArrayAdapter<Msg> mAdapter;

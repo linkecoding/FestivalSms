@@ -21,6 +21,7 @@ import com.codekong.festival_sms.config.Config;
 
 /**
  * Created by szh on 2016/12/22.
+ * 节日类别Fragment
  */
 
 public class FestivalCategoryFragment extends Fragment {

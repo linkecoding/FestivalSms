@@ -4,12 +4,17 @@ import java.util.Date;
 
 /**
  * Created by szh on 2016/12/22.
+ * 节日Bean
  */
 
 public class Festival {
+    //节日id
     private int id;
+    //节日名称
     private String name;
+    //节日描述
     private String desc;
+    //节日日期
     private Date date;
 
     public Festival(int id, String name){

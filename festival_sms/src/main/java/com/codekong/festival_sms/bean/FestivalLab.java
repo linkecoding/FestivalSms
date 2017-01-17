@@ -5,6 +5,7 @@ import java.util.List;
 
 /**
  * Created by szh on 2016/12/22.
+ * 节日类别
  */
 
 public class FestivalLab {
