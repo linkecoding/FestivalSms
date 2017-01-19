@@ -1,5 +1,7 @@
 package com.codekong.festival_sms.config;
 
+import android.net.Uri;
+
 /**
  * Created by szh on 2016/12/23.
  */
@@ -20,6 +22,10 @@ public class Config {
     public static final String COLUMN_FESTIVAL_NAME = "festivalName";
     public static final String COLUMN_DATE = "date";
 
-
     /*********************数据库相关配置*************************/
+    /*********************ContentProvider配置*************************/
+    public static final String AUTHORITY = "com.codekong.festival_sms.provider.SmsProvider";
+    public static final Uri URI_SMS_ALL = Uri.parse("content://" + AUTHORITY + "/sms");
+    /*********************ContentProvider配置*************************/
+
 }

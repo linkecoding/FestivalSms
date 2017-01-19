@@ -24,6 +24,7 @@ import com.codekong.festival_sms.R;
 import com.codekong.festival_sms.bean.Festival;
 import com.codekong.festival_sms.bean.FestivalLab;
 import com.codekong.festival_sms.bean.Msg;
+import com.codekong.festival_sms.bean.SendedMsg;
 import com.codekong.festival_sms.biz.SmsBiz;
 import com.codekong.festival_sms.config.Config;
 import com.codekong.festival_sms.view.FlowLayout;
@@ -67,7 +68,7 @@ public class SendMsgActivity extends AppCompatActivity {
     private BroadcastReceiver mSendBroadcastReceiver;
     private BroadcastReceiver mDeliverroadcastReceiver;
 
-    private SmsBiz mSmsBiz = new SmsBiz();
+    private SmsBiz mSmsBiz;
 
     //已经发送的短信的数目
     private int mMsgSendCount;
@@ -78,6 +79,7 @@ public class SendMsgActivity extends AppCompatActivity {
         setContentView(R.layout.activity_send_msg);
 
         mInflater = LayoutInflater.from(this);
+        mSmsBiz = new SmsBiz(this);
         initDatas();
         initViews();
         initEvents();
@@ -145,10 +147,27 @@ public class SendMsgActivity extends AppCompatActivity {
                     return;
                 }
                 mLayoutLoading.setVisibility(View.VISIBLE);
-                mTotalCount = mSmsBiz.sendMsg(mContactNums, msg, mSendPi, mDeliverPi);
+                mTotalCount = mSmsBiz.sendMsg(mContactNums, buildSendedMsg(msg), mSendPi, mDeliverPi);
                 mMsgSendCount = 0;
             }
         });
+    }
+
+    private SendedMsg buildSendedMsg(String msg) {
+        SendedMsg sendedMsg = new SendedMsg();
+        sendedMsg.setMsg(msg);
+        sendedMsg.setFestivalName(mFestival.getName());
+        String names = "";
+        String numbers = "";
+        for(String name : mContactNames){
+            names += name + ";";
+        }
+        for (String number : mContactNums){
+            numbers += number + ";";
+        }
+        sendedMsg.setNames(names.substring(0, names.length() - 1));
+        sendedMsg.setNumbers(numbers.substring(0, numbers.length() - 1));
+        return sendedMsg;
     }
 
 
@@ -241,4 +260,6 @@ public class SendMsgActivity extends AppCompatActivity {
         unregisterReceiver(mSendBroadcastReceiver);
         unregisterReceiver(mDeliverroadcastReceiver);
     }
+
+
 }

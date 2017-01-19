@@ -1,9 +1,15 @@
 package com.codekong.festival_sms.biz;
 
 import android.app.PendingIntent;
+import android.content.ContentValues;
+import android.content.Context;
 import android.telephony.SmsManager;
 
+import com.codekong.festival_sms.bean.SendedMsg;
+import com.codekong.festival_sms.config.Config;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -12,6 +18,11 @@ import java.util.Set;
  */
 
 public class SmsBiz {
+    private Context context;
+    public SmsBiz(Context context){
+        this.context = context;
+    }
+
     /**
      * 发送短信给一个号码
      * @param number
@@ -37,13 +48,24 @@ public class SmsBiz {
      * @param deliverPi
      * @return
      */
-    public int sendMsg(Set<String> numbers, String msg, PendingIntent sendPi, PendingIntent deliverPi){
-        SmsManager smsManager = SmsManager.getDefault();
+    public int sendMsg(Set<String> numbers, SendedMsg msg, PendingIntent sendPi, PendingIntent deliverPi){
+        save(msg);
         int result = 0;
         for (String number : numbers){
-            int count = sendMsg(number, msg, sendPi, deliverPi);
+            int count = sendMsg(number, msg.getMsg(), sendPi, deliverPi);
             result += count;
         }
         return result;
+    }
+
+    private void save(SendedMsg sendedMsg){
+        sendedMsg.setDate(new Date());
+        ContentValues values = new ContentValues();
+        values.put(Config.COLUMN_DATE, sendedMsg.getDate().getTime());
+        values.put(Config.COLUMN_FESTIVAL_NAME, sendedMsg.getFestivalName());
+        values.put(Config.COLUMN_MSG, sendedMsg.getMsg());
+        values.put(Config.COLUMN_NAMES, sendedMsg.getNames());
+        values.put(Config.COLUMN_NUMBERS, sendedMsg.getNumbers());
+        context.getContentResolver().insert(Config.URI_SMS_ALL, values);
     }
 }

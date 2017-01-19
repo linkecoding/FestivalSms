@@ -23,6 +23,9 @@
         <activity android:name=".activity.ChooseMsgActivity"
             android:parentActivityName=".activity.MainActivity"/>
         <activity android:name=".activity.SendMsgActivity"/>
+        <provider
+            android:authorities="com.codekong.festival_sms.provider.SmsProvider"
+            android:name=".provider.SmsProvider"/>
     </application>
 
 </manifest>

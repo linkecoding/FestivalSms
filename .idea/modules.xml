@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/FestivalSms.iml" filepath="$PROJECT_DIR$/FestivalSms.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/festival_sms/festival_sms.iml" filepath="$PROJECT_DIR$/festival_sms/festival_sms.iml" />
     </modules>
   </component>

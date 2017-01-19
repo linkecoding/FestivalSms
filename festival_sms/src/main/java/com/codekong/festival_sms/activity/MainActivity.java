@@ -6,9 +6,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.codekong.festival_sms.R;
 import com.codekong.festival_sms.fragment.FestivalCategoryFragment;
+import com.codekong.festival_sms.fragment.SmsHistoryFragment;
 
 public class MainActivity extends AppCompatActivity {
     private TabLayout mTabLayout;
@@ -33,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
         mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
+                if (position == 1)
+                    return new SmsHistoryFragment();
                 return new FestivalCategoryFragment();
             }
 

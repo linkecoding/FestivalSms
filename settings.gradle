@@ -1,1 +1,1 @@
-include ':app', ':festival_sms'
+include ':festival_sms'
