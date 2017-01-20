@@ -7,6 +7,13 @@ import android.net.Uri;
  */
 
 public class Config {
+    /*********************Android6.0权限适配相关配置*************************/
+     public static final int READ_CONTACTS_CODE = 0x01;
+     public static final int WRITE_CONTACTS_CODE = 0x02;
+     public static final int SEND_SMS_CODE = 0x03;
+     public static final int READ_PHONE_STATE_CODE = 0x04;
+    /*********************Android6.0权限适配相关配置*************************/
+
     public static final String FESTIVAL_ID = "festival_id";
     public static final String MSG_ID = "msg_id";
 

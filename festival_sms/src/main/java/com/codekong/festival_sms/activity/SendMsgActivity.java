@@ -1,5 +1,6 @@
 package com.codekong.festival_sms.activity;
 
+import android.Manifest;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,8 +30,10 @@ import com.codekong.festival_sms.config.Config;
 import com.codekong.festival_sms.view.FlowLayout;
 
 import java.util.HashSet;
+import java.util.concurrent.atomic.DoubleAccumulator;
 
-public class SendMsgActivity extends AppCompatActivity {
+public class SendMsgActivity extends BaseActivity implements View.OnClickListener {
+    private String mMsgContent;
     //节日id
     private int mFestivalId;
     //消息id
@@ -126,31 +128,15 @@ public class SendMsgActivity extends AppCompatActivity {
 
 
     private void initEvents() {
-        mBtnAddContact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                startActivityForResult(intent, CODE_REQUEST);
-            }
-        });
+        mBtnAddContact.setOnClickListener(this);
 
-        mFabSend.setOnClickListener(new View.OnClickListener() {
+        mFabSend.setOnClickListener(this);
+        /*mFabSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mContactNums.size() == 0){
-                    Toast.makeText(SendMsgActivity.this, "请先选择联系人", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                String msg = mEdMsg.getText().toString();
-                if (TextUtils.isEmpty(msg)){
-                    Toast.makeText(SendMsgActivity.this, "短信内容不能为空", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                mLayoutLoading.setVisibility(View.VISIBLE);
-                mTotalCount = mSmsBiz.sendMsg(mContactNums, buildSendedMsg(msg), mSendPi, mDeliverPi);
-                mMsgSendCount = 0;
-            }
-        });
+
+
+        });*/
     }
 
     private SendedMsg buildSendedMsg(String msg) {
@@ -216,7 +202,6 @@ public class SendMsgActivity extends AppCompatActivity {
                     if (!TextUtils.isEmpty(number)){
                         mContactNums.add(number);
                         mContactNames.add(contactName);
-
                         addTag(contactName);
                     }
                 }
@@ -249,7 +234,6 @@ public class SendMsgActivity extends AppCompatActivity {
             number = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             phoneCursor.close();
         }
-
         cursor.close();
         return number;
     }
@@ -262,4 +246,62 @@ public class SendMsgActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.id_btn_addContact:
+                addContacts();
+                break;
+            case R.id.id_fab_send:
+                if (mContactNums.size() == 0){
+                    Toast.makeText(SendMsgActivity.this, "请先选择联系人", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                mMsgContent = mEdMsg.getText().toString();
+                if (TextUtils.isEmpty(mMsgContent)){
+                    Toast.makeText(SendMsgActivity.this, "短信内容不能为空", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                sendMsg(mMsgContent);
+                mMsgSendCount = 0;
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 发送短信
+     * @param msg
+     */
+    private void sendMsg(String msg){
+        if (hasPermission(Manifest.permission.SEND_SMS)){
+            mLayoutLoading.setVisibility(View.VISIBLE);
+            doSendMsg();
+        }else{
+            requestPermission(Config.SEND_SMS_CODE, Manifest.permission.SEND_SMS);
+        }
+    }
+
+    /**
+     * 添加联系人
+     */
+    private void addContacts(){
+        if (hasPermission(Manifest.permission.READ_CONTACTS)){
+            doReadContacts();
+        }else{
+            requestPermission(Config.READ_CONTACTS_CODE, Manifest.permission.READ_CONTACTS);
+        }
+    }
+
+    @Override
+    public void doSendMsg() {
+        mTotalCount = mSmsBiz.sendMsg(mContactNums, buildSendedMsg(mMsgContent), mSendPi, mDeliverPi);
+    }
+
+    @Override
+    public void doReadContacts() {
+        Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+        startActivityForResult(intent, CODE_REQUEST);
+    }
 }
